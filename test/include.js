@@ -5,6 +5,7 @@ var assert = require('assert');
 var fs = require('fs');
 var glob = require('glob');
 var rimraf = require('rimraf');
+var path = require('path');
 
 describe('include', function () {
 
@@ -34,34 +35,27 @@ describe('include', function () {
         done();
     });
 
-    it('finds files includes method usage in directory', function(done) {
-        rimraf.sync('./test/testdata/output');
-        includeObj.compile({
-            src: './test/testdata/includes/*.js',
-            dest: './test/testdata/output'
-        });
-        done();
-    });
-
-    it('creates files in output directory', function(done) {
+    it('creates files in output directory and has right content', function(done) {
         rimraf.sync('./test/testdata/output');
         includeObj.compile({
             src: './test/testdata/includes/*.js',
             dest: './test/testdata/output',
             done: function() {
-                done();
+                glob('./test/testdata/output/*.js', function(err, files) {
+                    var ctn = {};
+                    files.forEach(function(file) {
+                        ctn[path.basename(file)] = fs.readFileSync(file).toString();
+                    });
+
+                    assert.equal(ctn['t1.js'], "var data = 5;");
+                    assert.equal(ctn['t2.js'], "var data1 = 5;\nvar data2 = 6;");
+
+                    done();
+                });
             }
         });
     });
 
-    //it('replacements include method includes given value', function(done) {
-    //
-    //});
-    //
-    //it('replacements multiple include method includes given values', function(done) {
-    //
-    //});
-    //
     //it('wraps value', function(done) {
     //
     //});
