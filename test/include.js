@@ -114,7 +114,23 @@ describe('include', function () {
         done();
     });
 
-    //it('allows to redefine value path', function(done) {
-    //
-    //});
+    it('allows to redefine method name from directory', function(done) {
+        rimraf.sync('./test/testdata/output');
+        includeObj.compile({
+            name: '__s',
+            src: './test/testdata/includes/@(t4).js',
+            dest: './test/testdata/output',
+            done: function() {
+                glob('./test/testdata/output/@(t4).js', function(err, files) {
+                    var ctn = {};
+                    files.forEach(function(file) {
+                        ctn[path.basename(file)] = fs.readFileSync(file).toString();
+                    });
+
+                    assert.equal(ctn['t4.js'], "var data = 5;");
+                    done();
+                });
+            }
+        });
+    });
 });
