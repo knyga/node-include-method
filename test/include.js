@@ -1,6 +1,6 @@
 /* global beforeEach, describe, context, it */
 'use strict';
-var include = require('../lib/include');
+var Include = require('../lib/include');
 var assert = require('assert');
 var fs = require('fs');
 var glob = require('glob');
@@ -12,7 +12,7 @@ describe('include', function () {
     var includeObj;
 
     beforeEach(function() {
-        includeObj = new include;
+        includeObj = new Include();
     });
 
     it('finds method usage in text', function(done) {
@@ -27,7 +27,7 @@ describe('include', function () {
         done();
     });
 
-    it('replacements values from file', function(done) {
+    it('compiles from text', function(done) {
         var compiled = includeObj.compileContent({
             content: "var me = include('./test/testdata/replacements/val5.js');"
         });
@@ -35,7 +35,7 @@ describe('include', function () {
         done();
     });
 
-    it('creates files in output directory and has right content', function(done) {
+    it('compiles from directory', function(done) {
         rimraf.sync('./test/testdata/output');
         includeObj.compile({
             src: './test/testdata/includes/*.js',
@@ -56,10 +56,15 @@ describe('include', function () {
         });
     });
 
-    //it('wraps value', function(done) {
-    //
-    //});
-    //
+    it('wraps valued compiled from text', function(done) {
+        var compiled = includeObj.compileContent({
+            content: "var me = include('./test/testdata/replacements/val5.js');",
+            wrap: '"'
+        });
+        assert.equal(compiled, 'var me = "5";');
+        done();
+    });
+
     //it('minifies html', function(done) {
     //
     //});
