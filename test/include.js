@@ -38,10 +38,10 @@ describe('include', function () {
     it('compiles from directory', function(done) {
         rimraf.sync('./test/testdata/output');
         includeObj.compile({
-            src: './test/testdata/includes/*.js',
+            src: './test/testdata/includes/@(t1|t2).js',
             dest: './test/testdata/output',
             done: function() {
-                glob('./test/testdata/output/*.js', function(err, files) {
+                glob('./test/testdata/output/@(t1|t2).js', function(err, files) {
                     var ctn = {};
                     files.forEach(function(file) {
                         ctn[path.basename(file)] = fs.readFileSync(file).toString();
@@ -69,10 +69,10 @@ describe('include', function () {
         rimraf.sync('./test/testdata/output');
         includeObj.compile({
             wrap: "'",
-            src: './test/testdata/includes/*.js',
+            src: './test/testdata/includes/@(t1|t2).js',
             dest: './test/testdata/output',
             done: function() {
-                glob('./test/testdata/output/*.js', function(err, files) {
+                glob('./test/testdata/output/@(t1|t2).js', function(err, files) {
                     var ctn = {};
                     files.forEach(function(file) {
                         ctn[path.basename(file)] = fs.readFileSync(file).toString();
@@ -87,10 +87,36 @@ describe('include', function () {
         });
     });
 
-    //it('minifies html', function(done) {
-    //
-    //});
-    //
+    it('minifies html from files', function(done) {
+        rimraf.sync('./test/testdata/output');
+        includeObj.compile({
+            wrap: "'",
+            minify: true,
+            minifyOptions: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeCommentsFromCDATA: true,
+                removeCDATASectionsFromCDATA: true,
+                removeAttributeQuotes: true,
+                removeRedundantAttributes: true
+            },
+            src: './test/testdata/includes/t3.js',
+            dest: './test/testdata/output',
+            done: function() {
+                glob('./test/testdata/output/t3.js', function(err, files) {
+                    var ctn = {};
+                    files.forEach(function(file) {
+                        ctn[path.basename(file)] = fs.readFileSync(file).toString();
+                    });
+
+                    assert.equal(ctn['t3.js'], 'var html = \'<ul><li class="some name">One</li><li class="">Two</li><li>Three</li><li class=something>Four</li><li class="x y z">Fix</li></ul>\';');
+
+                    done();
+                });
+            }
+        });
+    });
+
     //it('allows to redefine method name', function(done) {
     //
     //});
