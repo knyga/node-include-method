@@ -165,4 +165,26 @@ describe('include', function () {
             }
         });
     });
+
+    it('allows to redefine root', function(done) {
+        rimraf.sync('./test/testdata/output');
+        includeObj.compile({
+            basePath: './test/testdata/replacements',
+            src: './test/testdata/includes/@(t7|t8).js',
+            dest: './test/testdata/output',
+            done: function() {
+                glob('./test/testdata/output/@(t7|t8).js', function(err, files) {
+                    var ctn = {};
+                    files.forEach(function(file) {
+                        ctn[path.basename(file)] = fs.readFileSync(file).toString();
+                    });
+
+                    assert.equal(ctn['t7.js'], "var data = 5;");
+                    assert.equal(ctn['t8.js'], "var data1 = 5;\nvar data2 = 6;");
+
+                    done();
+                });
+            }
+        });
+    });
 });

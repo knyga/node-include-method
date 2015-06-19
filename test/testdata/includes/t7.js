@@ -1,0 +1,1 @@
+var data = include('/val5.js');
