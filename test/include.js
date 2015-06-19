@@ -65,6 +65,28 @@ describe('include', function () {
         done();
     });
 
+    it('wraps valued compiled from directory', function(done) {
+        rimraf.sync('./test/testdata/output');
+        includeObj.compile({
+            wrap: "'",
+            src: './test/testdata/includes/*.js',
+            dest: './test/testdata/output',
+            done: function() {
+                glob('./test/testdata/output/*.js', function(err, files) {
+                    var ctn = {};
+                    files.forEach(function(file) {
+                        ctn[path.basename(file)] = fs.readFileSync(file).toString();
+                    });
+
+                    assert.equal(ctn['t1.js'], "var data = '5';");
+                    assert.equal(ctn['t2.js'], "var data1 = '5';\nvar data2 = '6';");
+
+                    done();
+                });
+            }
+        });
+    });
+
     //it('minifies html', function(done) {
     //
     //});
