@@ -1,0 +1,1 @@
+var html = __injectTemplate('./test/testdata/replacements/navigation.html');

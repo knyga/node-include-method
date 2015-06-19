@@ -1,0 +1,30 @@
+<div
+        id="main-body"
+        ui-view="app">
+    <div id="main-loading">
+        <!-- Loading animation -->
+          <span class="fa-browser-ok">
+              <span
+                      class="loader"
+                      fa-display-fade="AppState.isLoading()"></span>
+                <ul class="loader-anim lt-ie10">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+          </span>
+        <!-- End of animation -->
+        <h1>FollowAnalytics</h1>
+
+        <h2>
+            <span class="fa-browser-error">Unfortunately, FollowAnalytics is not compatible with Internet Explorer 9 and lower. Please upgrade your browser or use another one.</span>
+            <span class="fa-browser-ok" ng-cloak>{{AppState.getText()}}</span>
+        </h2>
+    </div>
+</div>
+
+<!-- Browser feature check -->
+<script src="/bower_components/modernizr/modernizr.js"></script>
+<script>alert('123');</script>
