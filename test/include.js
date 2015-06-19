@@ -15,18 +15,6 @@ describe('include', function () {
         includeObj = new Include();
     });
 
-    it('finds method usage in text', function(done) {
-        var compiled = includeObj._replace("var me = include('./test/testdata/replacements/val5.js');", "5");
-        assert.equal(compiled, "var me = 5;");
-        done();
-    });
-
-    it('doesn\'t find method usage in text without method', function(done) {
-        var compiled = includeObj._replace("var me = in_cl_ude('./test/testdata/replacements/val5.js');", "5");
-        assert.notEqual(compiled, "var me = 5;");
-        done();
-    });
-
     it('compiles from text', function(done) {
         var compiled = includeObj.compileContent({
             content: "var me = include('./test/testdata/replacements/val5.js');"
@@ -117,10 +105,15 @@ describe('include', function () {
         });
     });
 
-    //it('allows to redefine method name', function(done) {
-    //
-    //});
-    //
+    it('allows to redefine method name from text', function(done) {
+        var compiled = includeObj.compileContent({
+            content: "var me = __injectvalue('./test/testdata/replacements/val5.js');",
+            name: '__injectvalue'
+        });
+        assert.equal(compiled, "var me = 5;");
+        done();
+    });
+
     //it('allows to redefine value path', function(done) {
     //
     //});
