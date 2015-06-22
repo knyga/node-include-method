@@ -235,4 +235,27 @@ describe('include', function () {
         });
     });
 
+    it('doesn\'t save file without method', function(done) {
+        includeObj.compile({
+            wrap: "'",
+            cwd: './test/testdata/includes/',
+            basePath: './test/testdata/replacements',
+            src: '**/nomethod.js',
+            dest: './test/testdata/output/',
+            minify: true,
+            minifyOptions: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeCommentsFromCDATA: true,
+                removeCDATASectionsFromCDATA: true,
+                removeAttributeQuotes: true,
+                removeRedundantAttributes: true
+            },
+            done: function() {
+                assert.equal(fs.existsSync('./test/testdata/output/nomethod.js'), false);
+                done();
+            }
+        });
+    });
+
 });
