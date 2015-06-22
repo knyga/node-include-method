@@ -13,6 +13,7 @@ describe('include', function () {
 
     beforeEach(function() {
         includeObj = new Include();
+        rimraf.sync('./test/testdata/output');
     });
 
     it('compiles from text', function(done) {
@@ -26,8 +27,9 @@ describe('include', function () {
     it('compiles from directory', function(done) {
         rimraf.sync('./test/testdata/output');
         includeObj.compile({
-            src: './test/testdata/includes/@(t1|t2).js',
-            dest: './test/testdata/output',
+            cwd: './test/testdata/includes/',
+            src: '@(t1|t2).js',
+            dest: './test/testdata/output/',
             done: function() {
                 glob('./test/testdata/output/@(t1|t2).js', function(err, files) {
                     var ctn = {};
@@ -54,11 +56,11 @@ describe('include', function () {
     });
 
     it('wraps valued compiled from directory', function(done) {
-        rimraf.sync('./test/testdata/output');
         includeObj.compile({
             wrap: "'",
-            src: './test/testdata/includes/@(t1|t2).js',
-            dest: './test/testdata/output',
+            cwd: './test/testdata/includes/',
+            src: '@(t1|t2).js',
+            dest: './test/testdata/output/',
             done: function() {
                 glob('./test/testdata/output/@(t1|t2).js', function(err, files) {
                     var ctn = {};
@@ -76,7 +78,6 @@ describe('include', function () {
     });
 
     it('minifies html from files', function(done) {
-        rimraf.sync('./test/testdata/output');
         includeObj.compile({
             wrap: "'",
             minify: true,
@@ -88,8 +89,9 @@ describe('include', function () {
                 removeAttributeQuotes: true,
                 removeRedundantAttributes: true
             },
-            src: './test/testdata/includes/t3.js',
-            dest: './test/testdata/output',
+            cwd: './test/testdata/includes/',
+            src: 't3.js',
+            dest: './test/testdata/output/',
             done: function() {
                 glob('./test/testdata/output/t3.js', function(err, files) {
                     var ctn = {};
@@ -115,11 +117,11 @@ describe('include', function () {
     });
 
     it('allows to redefine method name from directory', function(done) {
-        rimraf.sync('./test/testdata/output');
         includeObj.compile({
             name: '__s',
-            src: './test/testdata/includes/@(t4).js',
-            dest: './test/testdata/output',
+            cwd: './test/testdata/includes/',
+            src: '@(t4).js',
+            dest: './test/testdata/output/',
             done: function() {
                 glob('./test/testdata/output/@(t4).js', function(err, files) {
                     var ctn = {};
@@ -135,11 +137,11 @@ describe('include', function () {
     });
 
     it('allows to redefine root', function(done) {
-        rimraf.sync('./test/testdata/output');
         includeObj.compile({
             basePath: './test/testdata/replacements',
-            src: './test/testdata/includes/@(t7|t8).js',
-            dest: './test/testdata/output',
+            cwd: './test/testdata/includes/',
+            src: '@(t7|t8).js',
+            dest: './test/testdata/output/',
             done: function() {
                 glob('./test/testdata/output/@(t7|t8).js', function(err, files) {
                     var ctn = {};
@@ -157,14 +159,14 @@ describe('include', function () {
     });
 
     it('allows to redefine method name from directory and use html-minifier, and change root', function(done) {
-        rimraf.sync('./test/testdata/output');
         includeObj.compile({
             wrap: "'",
             basePath: './test/testdata/replacements',
             escapeWrap: true,
             name: '__injectTemplate',
-            src: './test/testdata/includes/@(t5|t6).js',
-            dest: './test/testdata/output',
+            cwd: './test/testdata/includes/',
+            src: '@(t5|t6).js',
+            dest: './test/testdata/output/',
             minify: true,
             minifyOptions: {
                 removeComments: true,
@@ -190,10 +192,10 @@ describe('include', function () {
     });
 
     it('compiles from directory with multiple src', function(done) {
-        rimraf.sync('./test/testdata/output');
         includeObj.compile({
-            src: ['./test/testdata/includes/t1.js', './test/testdata/includes/t2.js'],
-            dest: './test/testdata/output',
+            cwd: './test/testdata/includes/',
+            src: ['t1.js', 't2.js'],
+            dest: './test/testdata/output/',
             done: function() {
                 glob('./test/testdata/output/@(t1|t2).js', function(err, files) {
                     var ctn = {};
@@ -206,6 +208,29 @@ describe('include', function () {
 
                     done();
                 });
+            }
+        });
+    });
+
+    it('saves relative path to the file', function(done) {
+        includeObj.compile({
+            wrap: "'",
+            cwd: './test/testdata/includes/',
+            basePath: './test/testdata/replacements',
+            src: '**/here.js',
+            dest: './test/testdata/output/',
+            minify: true,
+            minifyOptions: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeCommentsFromCDATA: true,
+                removeCDATASectionsFromCDATA: true,
+                removeAttributeQuotes: true,
+                removeRedundantAttributes: true
+            },
+            done: function() {
+                assert.equal(fs.existsSync('./test/testdata/output/foo/bar/here.js'), true);
+                done();
             }
         });
     });

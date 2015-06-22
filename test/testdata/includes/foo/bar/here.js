@@ -1,0 +1,1 @@
+var html = include('./test/testdata/replacements/navigation.html');
