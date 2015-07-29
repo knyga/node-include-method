@@ -2,3 +2,4 @@
 node_modules
 test/testdata/output
 .DS_Store
+npm-debug.log
