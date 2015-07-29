@@ -296,4 +296,22 @@ describe('include', function () {
         done();
     });
 
+    it('removes parts of injected text by pattern', function(done) {
+        var content = "include('./test/testdata/replacements/kiwi.svg')";
+        var compiled = includeObj.compileContent({
+            replaceRules: [
+                {
+                    pattern: '<path[^<>]+>.*</path>',
+                    replacement: ''
+                }
+            ],
+            minify: true,
+            content: content
+        });
+
+        assert.equal(compiled, '<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="612px" height="502.174px" viewBox="0 65.326 612 502.174" enable-background="new 0 65.326 612 502.174" xml:space="preserve" class="logo"><ellipse class="ground" cx="283.5" cy="487.5" rx="259" ry="80"></ellipse><filter id="pictureFilter">  <feGaussianBlur stdDeviation="15"></feGaussianBlur></filter></svg>');
+
+        done();
+    });
+
 });
