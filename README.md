@@ -107,24 +107,28 @@ Path for required files.
 
 #### escapeWrap
 Type: `Boolean`
+
 Default: `false`
 
 If true then wrapper characher will be escaped in included string.
 
 #### filterNoMethod
 Type: `Boolean`
+
 Default: `false`
 
 If true then files without include method will be ignored.
 
 #### isBase64
 Type: `Boolean`
+
 Default: `false`
 
 If true then output will be converted to base64. May be used to include images and svg files.
 
 #### name
 Type: `String`
+
 Default: `include`
 
 Name of inclusion method. May be redifined to avoid conflicts with existing methods.
