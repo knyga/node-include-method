@@ -9,6 +9,7 @@ Configurable tool to include your dependencies in the place they needed on the c
 4. Include images inside templates, css...
 5. Build js files.
 6. Move JSX templates to separate files and add them on the compilation step.
+7. Compile CSS or other files.
 
 ## How to use
 
