@@ -2,6 +2,22 @@
 
 Configurable tool to include your dependencies in the place they needed on the compilation step.
 
+Input example set to show the idea:
+
+```
+component.js
+    var template = include("/component.html")
+component.html
+    include("/component-part1.html")
+    include("/component-part2.html")
+    include("/component-part3.html")
+component-part1.html
+component-part2.html
+component-part3.html
+```
+
+And in the output we will have new component.js with var template = "TEMPLATE". Where TEMPLATE - is template read from component.html which consists of 3 included during compilation parts.
+
 ## Known use cases
 1. With node include method you can split your html templates on multiple parts and build them during the compilation step.
 2. You can include all html templates to your js files in the simple way. Just write ```includeTemplate(PATH_TO_FILE)``` and tool will add it.
